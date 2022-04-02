@@ -3,6 +3,35 @@
     <h2 class="title">我的订单</h2>
     <table class="tab" width="100%" border="0" cellspacing="0" cellpadding="0">
       <thead>
+      <tr style="background: white">
+        <td colspan="9" style="text-align: center;">
+          <el-input style="width: 12%;text-align: center" size="small" v-model="inputId" placeholder="输入单号">
+            <el-button class="button" slot="append" icon="el-icon-search" style="width: 13px" @click="searchById"></el-button>
+          </el-input>
+          <el-input style="width: 15%;text-align: center;margin-left: 30px" size="small" v-model="inputName" placeholder="输入商品名字">
+            <el-button class="button" slot="append" icon="el-icon-search" style="width: 13px" @click="searchByName"></el-button>
+          </el-input>
+          <el-select
+              size="small"
+              style="width: 20%;padding: 4px;margin-left: 50px"
+              :multiple-limit=4
+              v-model="groupId"
+              multiple
+              filterable
+              allow-create
+              default-first-option
+              placeholder="按商品分类(最多选3个)">
+            <el-option
+                v-for="item in options"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+            </el-option>
+          </el-select>
+          <el-button size="small" round style="margin-left: 50px" @click="orderByState('待发货')">未发货</el-button>
+          <el-button size="small" round style="margin-left: 20px" @click="orderByState('已催发货')">已催货</el-button>
+        </td>
+      </tr>
       <tr>
         <th style="width: 10%;">订单号</th>
         <th style="width: 14%;">商品图片</th>
@@ -27,8 +56,30 @@
         <td>{{item.createDate}}</td>
         <td>{{item.state}}</td>
         <td>
-          <el-button class="el-button" size="mini"  :disabled=item.ifDelete @click="deleteOrder(index)">删除</el-button>
-          <el-button size="mini" @click="clickState(index)">发货</el-button>
+          <el-button class="button" size="mini"  :disabled=item.ifDelete @click="deleteOrder(index)">删除</el-button>
+          <el-button class="button" size="mini" @click="clickState(index)" :disabled="item.disable">发货</el-button>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="9">
+          <el-button size="small" @click="lastPage">上一页</el-button>
+          &emsp;&emsp;&emsp;
+          <el-button size="small" @click="nextPage">下一页</el-button>
+          &emsp;
+          <el-select
+              style="width: 6%"
+              size="small"
+              v-model="page"
+              allow-create
+              filterable
+              placeholder="页数">
+            <el-option
+                v-for="item in optionPage"
+                :key="item.value"
+                :label="item.value"
+                :value="item.value">
+            </el-option>
+          </el-select>
         </td>
       </tr>
       </tbody>
@@ -46,15 +97,131 @@ export default {
       orderList: [],
       id: null,
       index: null,
+      inputId: '',
+      inputName:'',
+      groupId: [],
+      options: [],
+      page: 1,
+      totalPage: null,
+      state: null,
+      optionPage: [
+        {
+          value: 1
+        },
+        {
+          value: 2
+        },
+        {
+          value: 3
+        },
+        {
+          value: 4
+        },
+        {
+          value: 5
+        }
+      ]
     }
   },
   methods: {
-    evaluateState(val) {
-      this.addEvaluate = val
+    lastPage() {
+      if (this.page === 1) {
+        this.$message({
+          message: '这已经是第一页了',
+          type: 'info'
+        })
+        return
+      }
+      this.page --
     },
-    addIndex(val) {
-      this.orderList[val].changeState = null
-      this.orderList[val].state = "已评价"
+    nextPage() {
+      if (this.page === this.totalPage) {
+        this.$message({
+          message: '这已经是最后一页了',
+          type: 'info'
+        })
+        return
+      }
+      this.page ++
+    },
+    searchById() {
+      this.state = null
+      this.inputName= ''
+      let _this = this
+      let groupId = _this.groupId
+      let merId = null
+      if (_this.$store.state.roleId === 3)
+      {
+        merId = _this.$store.state.userId
+      }
+      request({
+        url: 'order/checkSearch',
+        method: 'post',
+        data: {
+          groupId,
+          page: _this.page,
+          merId,
+          id: _this.inputId
+        }
+      }).then(data => {
+        if (data.data !== null) {
+          _this.orderList = data.data.records
+          _this.totalPage = data.data.pages
+        }
+      })
+    },
+    searchByName() {
+      this.state = null
+      this.inputId = ''
+      let _this = this
+      let groupId = _this.groupId
+      let merId = null
+      if (_this.$store.state.roleId === 3)
+      {
+        merId = _this.$store.state.userId
+      }
+      request({
+        url: 'order/checkSearch',
+        method: 'post',
+        data: {
+          groupId,
+          page: _this.page,
+          merId,
+          name: _this.inputName
+        }
+      }).then(data => {
+        if (data.data !== null) {
+          _this.orderList = data.data.records
+          _this.totalPage = data.data.pages
+        }
+      })
+    },
+    orderByState(val) {
+      this.state = val
+      this.inputId = ''
+      this.inputName= ''
+      let _this = this
+      let groupId = _this.groupId
+      let merId = null
+      if (_this.$store.state.roleId === 3)
+      {
+        merId = _this.$store.state.userId
+      }
+      request({
+        url: 'order/checkSearch',
+        method: 'post',
+        data: {
+          groupId,
+          page: _this.page,
+          merId,
+          state: val
+        }
+      }).then(data => {
+        if (data.data !== null) {
+          _this.orderList = data.data.records
+          _this.totalPage = data.data.pages
+        }
+      })
     },
     deleteOrder(index) {
       if (this.orderList[index].state === "待发货" || this.orderList[index].state === "已催发货") {
@@ -103,30 +270,78 @@ export default {
       }
     },
     clickState(index) {
-      if (this.orderList[index].changeState === "催货") {
-        let _this = this
-        request({
-          url:"order/updateState",
-          method: 'post',
-          params: {
-            state: "已催发货",
-            id: _this.orderList[index].id
-          }
-        }).then(data => {
-          if (data.data === 1) {
-            this.orderList[index].state = "已催发货"
-            handleAlert("已催商家发货")
-            this.orderList[index].changeState = null
-          } else {
-            handleAlert("催货失败")
-          }
-        })
-      } else {
-        this.id = this.orderList[index].id
-        this.index = index
-        this.addEvaluate = true
-      }
+      let _this = this
+      request({
+        url: '/order/deliver',
+        method: 'post',
+        params: {
+          id: _this.orderList[index].id
+        }
+      }).then(()=>{
+        handleAlert("发货成功")
+      })
     },
+  },
+  watch: {
+    page() {
+      let _this = this
+      if (this.page > this.totalPage) {
+        this.$message({
+          type: 'info',
+          message: '一共只有'+ _this.totalPage + '页'
+        });
+        this.page = this.totalPage
+      }
+      let groupId = _this.groupId
+      let merId = null
+      if (_this.$store.state.roleId === 3)
+      {
+        merId = _this.$store.state.userId
+      }
+      request({
+        url: 'order/checkSearch',
+        method: 'post',
+        data: {
+          state: _this.state,
+          groupId,
+          page: _this.page,
+          merId,
+          id : _this.inputId,
+          name: _this.inputName
+        }
+      }).then(data => {
+        if (data.data !== null) {
+          _this.orderList = data.data.records
+          _this.totalPage = data.data.pages
+        }
+      })
+    },
+    groupId() {
+      this.state = null
+      let _this = this
+      let groupId = _this.groupId
+      let merId = null
+      if (_this.$store.state.roleId === 3)
+      {
+        merId = _this.$store.state.userId
+      }
+      request({
+        url: 'order/checkSearch',
+        method: 'post',
+        data: {
+          groupId,
+          page: _this.page,
+          merId,
+          id : _this.inputId,
+          name: _this.inputName
+        }
+      }).then(data => {
+        if (data.data !== null) {
+          _this.orderList = data.data.records
+          _this.totalPage = data.data.pages
+        }
+      })
+    }
   },
   created() {
     let _this = this
@@ -135,11 +350,15 @@ export default {
         _this.$router.push('/admin')
       })
     } else {
+      let merId = null
+      if (_this.$store.state.roleId === 3) {
+        merId = _this.$store.state.userId
+      }
       request({
         url:'/order/merList',
         method: 'get',
         params: {
-          merId: _this.$store.state.userId
+          merId
         }
       }).then(data => {
         if (data.code === 0) {
@@ -148,10 +367,21 @@ export default {
               data.data.splice(i,1)
             }
           }
-          _this.orderList = data.data
+          _this.orderList = data.data.records
+          _this.totalPage = data.data.pages
+          _this.orderList.forEach(function (order) {
+            order.disable = (order.state === "已发货" || order.state === "已评价");
+          })
         } else {
           handleAlert("请求订单数据失败,请联系管理员")
         }
+      })
+      // 后端查找有多少种分类
+      request({
+        url: 'group/list',
+        method: 'get',
+      }).then(data => {
+        _this.options = data.data
       })
     }
   }
@@ -163,13 +393,14 @@ export default {
   padding: 0;
   margin: 0;
 }
-.el-button {
+.button {
   padding: 0;
   width:36%;
   height: 22px;
   text-align: center;
   margin: 4px 0 0;
 }
+
 span:hover {
   text-decoration:underline
 }

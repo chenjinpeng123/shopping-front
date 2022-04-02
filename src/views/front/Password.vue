@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header height="150px"></el-header>
+    <el-header height="180px"></el-header>
     <el-main>
       <el-row>
         <el-col :span="8" :offset="8">
@@ -18,11 +18,11 @@
               <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
               <el-button @click="resetForm('ruleForm')">重置</el-button>
             </el-form-item>
-          </el-form>
+          </el-form>z
         </el-col>
       </el-row>
     </el-main>
-    <el-footer></el-footer>
+    <el-footer height="130px"></el-footer>
   </el-container>
 
 </template>
