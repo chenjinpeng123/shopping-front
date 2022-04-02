@@ -4,12 +4,12 @@
       <img src="../../../public/img/home/pic.png" height="40" width="150"/>
       <h2 @click="home(null)">首页</h2>
       <select v-model="op">
-        <option value="/login" style="color: #358ed5">修改头像</option>
-        <option style="color: deeppink">我的淘宝</option>
-        <option style="color: #e957ff">修改密码</option>
+        <option value="/order" style="color: deeppink">我的订单</option>
+        <option value="/avatar" style="color: #358ed5">修改头像</option>
+        <option value="/password" style="color: #e957ff">修改密码</option>
         <option v-show=false>我的</option>
       </select>
-      <img class="head" src="../../../public/img/head/head10.jpg" height="28" width="28">
+      <img class="head" :src="$store.state.avatarUrl" height="28" width="28">
       <img @click="goCart" class="cart" src="../../../public/img/home/cart.jpg" height="38" width="38">
     </div>
     <div class="container">
@@ -31,14 +31,20 @@ export default {
   },
   watch: {
     op() {
-      this.$router.push(this.op)
+      if ((this.op === "/password" || this.op === "/avatar" || this.op === "/order") && this.$store.state.userId === null) {
+        alert("请先登录!!!")
+        this.op = "我的"
+      } else if (this.op === "我的") {
+      }
+      else {
+        this.$router.push(this.op)
+      }
     }
   },
   methods: {
     goCart() {
       if (this.$store.state.userId === null) {
         alert("请先登录再查看购物车!!!")
-        this.$router.push("/login")
       } else {
         this.$router.push("/cart")
       }
@@ -51,12 +57,13 @@ export default {
       }
     },
     login() {
-      this.$router.push("/login")
+      this.$router.replace("/login")
     },
     changeName() {
       this.$store.state.goodName = this.query
     },
   }
+
 }
 </script>
 
@@ -69,7 +76,7 @@ export default {
 .head {
   position: absolute;
   margin-top: -2px;
-  margin-left: -20px;
+  margin-left: -21.3px;
   border-radius: 50%;
 }
 

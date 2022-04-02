@@ -8,9 +8,9 @@
         </li>
       </ul>
       <div class="page">
-        <button @click="last">上一页</button>
+        <el-button @click="last" size="small">上一页</el-button>
         &emsp;&emsp;&emsp;&emsp;
-        <button @click="next">下一页</button>
+        <el-button @click="next" size="small">下一页</el-button>
       </div>
     </div>
 </template>
@@ -18,8 +18,8 @@
 
 .page {
   position: absolute;
-  bottom: 1%;
-  right: 45%;
+  bottom: 0.3%;
+  right: 40%;
 }
 
 .goodList {

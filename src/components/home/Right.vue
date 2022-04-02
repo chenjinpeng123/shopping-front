@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import GoodList from "./goodList";
+import GoodList from "./GoodList";
 export default {
   components:{
     GoodList

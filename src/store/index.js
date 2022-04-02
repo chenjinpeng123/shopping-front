@@ -10,9 +10,20 @@ export default new Vuex.Store({
         goodId:Number,
         userName:null,
         password:null,
-        userId:null
+        userId:null,
+        roleId:null,
+        avatarUrl:"img/home/personal.png",
+        selectConsignee:false,
+        manageConsignee:false,
+        addConsignee:false
     },
     mutations: {
+        changeRoleId(state, roleId) {
+            state.roleId = roleId
+        },
+        changeAvatarUrl(state, url) {
+            state.avatarUrl = url
+        },
         changeGoodId(state, id) {
             state.goodId = id
         },
@@ -22,6 +33,9 @@ export default new Vuex.Store({
         changePU(state , json) {
             state.password = json.password
             state.userName = json.userName
+        },
+        changePassword(state, password) {
+            state.password = password
         },
         changeUserId(state, id) {
             state.userId = id
