@@ -5,14 +5,13 @@
       <tr>
         <td colspan="6">
           <el-select
-              style="width: 25%;padding: 4px;margin-left: 50px"
-              :multiple-limit=4
+              style="width: 33%;padding: 4px;margin-left: 40px"
+              :multiple-limit=3
               v-model="groupId"
               multiple
               filterable
-              allow-create
               default-first-option
-              placeholder="请选择分类(最多选4个)">
+              placeholder="请选择分类(最多选3个)">
             <el-option
                 v-for="item in options"
                 :key="item.id"
@@ -20,7 +19,7 @@
                 :value="item.id">
             </el-option>
           </el-select>
-          <el-input style="width: 25%;margin-left: 180px" v-model="input" placeholder="请输入内容"></el-input>
+          <el-input style="width: 25%;margin-left: 150px" v-model="input" placeholder="请输入内容"></el-input>
           <el-button style="margin-left: 2px" type="primary" icon="el-icon-search" @click="search">搜索</el-button>
         </td>
 
@@ -173,6 +172,7 @@ export default {
     },
     search() {
       let _this = this
+      this.page = 1
       _this.groupId = []
       request({
         url: 'queryGood/list',
@@ -188,13 +188,15 @@ export default {
         }
       }).then(data => {
         if (data.data !== null) {
-          _this.totalPage = data.data.totalPage
-          _this.goodsList = data.data.contentList
-          for (let i = 0; i < _this.goodsList.length; i++) {
-            if (_this.goodsList[i].state) {
-              _this.goodsList[i].content = "停用"
-            } else {
-              _this.goodsList[i].content = "启用"
+          if (data.data.contentList !== null) {
+            _this.totalPage = data.data.totalPage
+            _this.goodsList = data.data.contentList
+            for (let i = 0; i < _this.goodsList.length; i++) {
+              if (_this.goodsList[i].state) {
+                _this.goodsList[i].content = "停用"
+              } else {
+                _this.goodsList[i].content = "启用"
+              }
             }
           }
         }
@@ -241,6 +243,7 @@ export default {
       params: {
         groupId,
         page: _this.page,
+        name: null,
         num: 4,
         roleId: _this.$store.state.roleId,
         userId: _this.$store.state.userId
@@ -251,6 +254,7 @@ export default {
       if (data.data !== null) {
         _this.goodsList = data.data.contentList
         _this.totalPage = data.data.totalPage
+        console.log(data.data)
         for (let i = 0; i < _this.goodsList.length; i++) {
           if (_this.goodsList[i].state) {
             _this.goodsList[i].content = "停用"
@@ -281,6 +285,7 @@ export default {
           groupId,
           page: _this.page,
           num: 4,
+          name: _this.input,
           roleId: _this.$store.state.roleId,
           userId: _this.$store.state.userId
         }, paramsSerializer: params => {
@@ -304,7 +309,6 @@ export default {
       if (this.page > this.totalPage) {
         handleAlert("总页数只有"+this.totalPage+"页")
         this.page = this.totalPage
-        return
       }
       let _this = this
       let groupId = _this.groupId
@@ -314,6 +318,7 @@ export default {
         params: {
           groupId,
           page: _this.page,
+          name: _this.input,
           num: 4,
           roleId: _this.$store.state.roleId,
           userId: _this.$store.state.userId

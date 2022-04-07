@@ -13,6 +13,7 @@ import BackGround from "../views/back/BackGround"
 import UploadPic from "../components/background/mer/UploadPic"
 import CheckGood from "../components/background/CheckGood"
 import Welcome from "../components/background/Welcome"
+import OrderManager from "../components/background/OrderManager"
 import CheckOrder from "../components/background/CheckOrder"
 
 
@@ -75,6 +76,10 @@ const routes = [
       {
         path: 'checkOrder',
         component: CheckOrder
+      },
+      {
+        path: 'orderManager',
+        component: OrderManager
       }
     ]
   }

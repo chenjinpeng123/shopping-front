@@ -32,11 +32,11 @@
             <span slot="title">订单管理</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="3-1" class="menuItem" @click="linkTo('/backGround/checkOrder')">
-              查看订单
+            <el-menu-item index="3-1" class="menuItem" @click="linkTo('/backGround/orderManager')">
+              订单管理
             </el-menu-item>
-            <el-menu-item index="3-2" class="menuItem" @click="linkTo('/backGround/checkGood')">
-              查看商品
+            <el-menu-item index="3-2" class="menuItem" @click="linkTo('/backGround/checkOrder')">
+              查看订单
             </el-menu-item>
           </el-menu-item-group>
         </el-submenu>
