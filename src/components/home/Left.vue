@@ -1,29 +1,35 @@
 <template>
   <div>
     <div class="title">热门推荐</div>
-    <ul class="menu">
-      <li @click="changeMenu(1)">手机</li>
-      <li @click="changeMenu(2)">笔记本电脑</li>
-      <li>笔记本电脑</li>
-      <li>手机</li>
-      <li>笔记本电脑</li>
-      <li>手机</li>
-      <li>笔记本电脑</li>
-      <li>手机</li>
-      <li>笔记本电脑</li>
-      <li>手机</li>
-      <li>笔记本电脑</li>
+    <ul class="menu" v-for="item of groups">
+      <li @click="changeMenu(item.id)">{{item.name}}</li>
     </ul>
   </div>
 </template>
 
 <script>
+import request from "../../network/request";
 export default {
+  data() {
+    return {
+      groups: [],
+    }
+  },
   methods: {
     changeMenu(id) {
       this.$store.commit("changeGoodId",id)
       this.$store.commit("changeGoodName",null)
     }
+  },
+  created() {
+    let _this = this
+    request({
+      url: 'group/list',
+      method: 'get'
+    }).then(data => {
+      console.log(data.data);
+      _this.groups = data.data
+    })
   }
 }
 </script>

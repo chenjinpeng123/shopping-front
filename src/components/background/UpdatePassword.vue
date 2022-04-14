@@ -3,7 +3,7 @@
     <el-header height="180px"></el-header>
     <el-main>
       <el-row>
-        <el-col :span="8" :offset="8">
+        <el-col :span="8" :offset="7">
           <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="原始密码" prop="oldPassword">
               <el-input v-model="ruleForm.oldPassword"></el-input>
@@ -87,7 +87,7 @@ export default {
             alert("原始密码错误")
           } else {
             request({
-              url: 'user/updatePassword',
+              url: 'admin/update',
               method: 'post',
               data: {
                 newPassword: _this.ruleForm.password,
@@ -97,7 +97,6 @@ export default {
               if (data.data === 1) {
                 _this.$store.commit("changePassword",_this.ruleForm.password)
                 alert("密码修改成功")
-                _this.$router.push("/")
               } else {
                 alert("密码修改失败,请联系管理员")
               }

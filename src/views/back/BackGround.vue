@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Merchant v-if="$store.state.roleId === 3"></Merchant>
+    <Merchant></Merchant>
   </div>
 </template>
 

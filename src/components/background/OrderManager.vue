@@ -56,8 +56,8 @@
         <td>{{item.createDate}}</td>
         <td>{{item.state}}</td>
         <td>
-          <el-button class="button" size="mini"  :disabled=item.ifDelete @click="deleteOrder(index)">删除</el-button>
-          <el-button class="button" size="mini" @click="clickState(index)" :disabled="item.disable">发货</el-button>
+          <el-button class="button" size="mini"  :disabled="item.ifDelete || $store.state.roleId === 2" @click="deleteOrder(index)">删除</el-button>
+          <el-button class="button" size="mini" @click="clickState(index)" :disabled="item.disable || $store.state.roleId === 2">发货</el-button>
         </td>
       </tr>
       <tr>

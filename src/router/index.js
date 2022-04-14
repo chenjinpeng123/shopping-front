@@ -15,8 +15,9 @@ import CheckGood from "../components/background/CheckGood"
 import Welcome from "../components/background/Welcome"
 import OrderManager from "../components/background/OrderManager"
 import CheckOrder from "../components/background/CheckOrder"
-
-
+import goodClassify from "../components/background/GoodClassify"
+import CheckUser from "../components/background/CheckUser"
+import UpdatePassword from "../components/background/UpdatePassword"
 
 Vue.use(VueRouter)
 
@@ -62,6 +63,10 @@ const routes = [
     component: BackGround,
     children: [
       {
+        path: 'updatePassword',
+        component: UpdatePassword
+      },
+      {
         path: 'uploadPic',
         component: UploadPic
       },
@@ -80,6 +85,14 @@ const routes = [
       {
         path: 'orderManager',
         component: OrderManager
+      },
+      {
+        path: 'goodClassify',
+        component: goodClassify
+      },
+      {
+        path: 'checkUser',
+        component: CheckUser
       }
     ]
   }

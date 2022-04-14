@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div style="margin-bottom: 30px">
     <Top></Top>
     <div id="div_box">
       <div class="wrap" v-if="good.pictures">
@@ -91,6 +91,26 @@
           <div v-if="good.pictures[4]" :style="active4" id="div_box-bottom-left-div-5"><img @mouseover="showpic4" :src="good.pictures[4]" width="55px" height="55px"/></div>
         </div>
       </div>
+<!--      <br>-->
+<!--      <h2 style="margin-left: 370px">商品评价</h2>-->
+    </div>
+    <div v-for="(item,index) in rate">
+      <div class="block" style="margin-left: 280px">
+        <br>
+        <br>
+        <span style="margin-left: 41px">用户{{index+1}}:&emsp;商品打分</span>
+        <el-rate v-model="item.score" style="position: relative;left: 100px;top: 3px" :disabled="true"></el-rate>
+        &emsp;&emsp;<p style="margin-left: 103px;margin-top: -10px">商品评价</p>
+        <el-input
+            :disabled="true"
+            type="textarea"
+            :rows="4"
+            placeholder="请输入内容"
+            v-model="item.evaluate"
+            class="evaText"
+            style="width: 50%;margin-left: 100px;margin-top: 5px">
+        </el-input>
+      </div>
     </div>
   </div>
 
@@ -117,6 +137,7 @@ export default {
     return {
       selectPay: false,
       person: "",
+      rate: [],
       good: {
       },
       picture: String,
@@ -330,6 +351,17 @@ export default {
       _this.good = date.data
       console.log(_this.good)
       _this.picture = _this.good.pictures[0]
+    })
+
+    request({
+      url: 'order/getEvaluate',
+      method: "get",
+      params: {
+        id: this.$route.query.id
+      }
+    }).then(data => {
+      _this.rate = data.data
+      console.log(_this.rate)
     })
   }
 }

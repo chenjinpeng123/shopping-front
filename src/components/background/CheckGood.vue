@@ -1,6 +1,6 @@
 <template>
   <div>
-    <table style="border: solid 1.3px; position: relative; left: 170px; top: 20px">
+    <table style="border: solid 1.3px; position: relative; left: 140px; top: 20px">
       <thead>
       <tr>
         <td colspan="6">
@@ -41,13 +41,13 @@
         <td style="text-align: center">{{good.balance}}</td>
         <td style="text-align: center">{{good.address}}</td>
         <td :class="{'enable': !good.state}">
-          <el-tooltip class="item" effect="dark" content="删除" placement="right-start">
+          <el-tooltip class="item" effect="dark" content="删除" placement="right-start" v-if="$store.state.roleId !== 2">
             <i class="el-icon-delete delete" @click="deleteGood(index)"></i>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" :content="good.content" placement="right">
+          <el-tooltip class="item" effect="dark" :content="good.content" placement="right" v-if="$store.state.roleId !== 2">
             <i @click="clickState(index)" class="state" :class="{'el-icon-video-pause':good.state,'el-icon-video-play':!good.state}"></i>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="编辑" placement="right-end">
+          <el-tooltip class="item" effect="dark" content="编辑" placement="right-end" v-if="$store.state.roleId !== 2">
             <i class="el-icon-edit edit" @click="updateGood(index)"></i>
           </el-tooltip>
           <el-dialog  v-if="goodUpdate" :visible="ifUpdate"  @close="closeDialog" append-to-body>
@@ -254,7 +254,6 @@ export default {
       if (data.data !== null) {
         _this.goodsList = data.data.contentList
         _this.totalPage = data.data.totalPage
-        console.log(data.data)
         for (let i = 0; i < _this.goodsList.length; i++) {
           if (_this.goodsList[i].state) {
             _this.goodsList[i].content = "停用"
